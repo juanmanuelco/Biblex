@@ -12,11 +12,21 @@ class BfoxTranslations {
 		// If we don't have any translations saved used the defaults
 		if ($use_default_if_empty && empty($translations)) {
 			$defaults = (array) apply_filters('bfox_translation_defaults', array(
-				array('ESV', 'English Standard Version', 'http://biblefox.com/?bfoxp=%ref%&trans=ESV'),
-				array('WEB', 'World English Bible', 'http://biblefox.com/?bfoxp=%ref%&trans=WEB'),
-				array('HNV', 'Hebrew Names Version', 'http://biblefox.com/?bfoxp=%ref%&trans=HNV'),
-				array('KJV', 'King James Version', 'http://biblefox.com/?bfoxp=%ref%&trans=KJV'),
-				array('ASV', 'American Standard Version', 'http://biblefox.com/?bfoxp=%ref%&trans=ASV'),
+
+				array('KJV', 'King James Version', 'https://www.bible.com/bible/1/%ref%.KJV'),
+
+				array('RVA2015', 'Reina Valera Actualizada', 'https://www.bible.com/bible/1782/%ref%.RVA2015'),
+				array('RVC', 'Reina Valera Contemporánea', 'https://www.bible.com/bible/146/%ref%.RVC'),
+				array('RVES', 'Reina-Valera Antigua', 'https://www.bible.com/bible/147/%ref%.RVC'),
+
+				array('RVR1909', 'Reina Valera 1909', 'https://www.bible.com/bible/1718/%ref%.RVR09'),
+				array('RVR1960', 'Reina Valera 1960', 'https://www.bible.com/bible/149/%ref%.RVR1960'),
+				array('RVR1995', 'Reina Valera 1995', 'https://www.bible.com/bible/150/%ref%.RVR95'),
+
+				array('AMPC', 'Amplified Bible, Classic Edition', 'https://www.bible.com/bible/8/%ref%.AMPC'),
+				array('ESV', 'English Standard Version', 'https://www.bible.com/bible/59/%ref%.ESV'),
+				array('WEB', 'World English Bible', 'https://www.bible.com/bible/206/%ref%.WEB'),
+				array('HNV', 'Hebrew Names Version', 'https://www.bible.com/bible/8/%ref%.HNV'),
 			));
 
 			foreach ($defaults as $default) {
@@ -92,16 +102,21 @@ class BfoxTranslations {
 }
 
 function bfox_translation_settings() {
+	$error = '';
+	$message = '';
+	$trans = new stdClass;
+	$trans->short_name = '';
+	$trans->long_name = '';
+	$trans->url = '';
 
 	if (isset($_POST['add-translation'])) {
 		check_admin_referer('bfox_translation_settings_add');
 
-		$trans = new stdClass;
 		$trans->short_name = $_POST['short-name'];
 		$trans->long_name = $_POST['long-name'];
 		$trans->url = $_POST['url'];
 
-		$error = '';
+
 		if (empty($trans->long_name)) $error = __('You must enter a Translation name', 'bfox');
 		else if (empty($trans->short_name)) $error = __('You must enter a Translation abbreviation', 'bfox');
 		else if (empty($trans->url)) $error = __('You must enter the URL for the Translation', 'bfox');

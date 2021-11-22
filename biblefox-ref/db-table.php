@@ -186,7 +186,8 @@ class BfoxRefDbTable extends BfoxSequenceDbTable {
 	}
 
 	public function save_data_row($data_row, $id_col, $content_col) {
-		return $this->save_item($data_row->$id_col, new BfoxRef($data_row->$content_col));
+		$box =  new BfoxRef($data_row->$content_col);
+		return $this->save_item($data_row->$id_col,$box);
 	}
 
 	/**
@@ -201,12 +202,11 @@ class BfoxRefDbTable extends BfoxSequenceDbTable {
 	 * @param integer $offset
 	 * @return array
 	 */
-	public static function simple_refresh(BfoxRefDbTable $db_table, $id_col, $content_col, $limit = 0, $offset = 0) {
+	public static function simple_refresh(BfoxRefDbTable $db_table, $id_col, $content_col, $limit = 100, $offset = 0) {
 		global $wpdb;
 
 		$limit = (int) $limit;
 		$offset = (int) $offset;
-		if (0 == $limit) $limit = 100;
 
 		$results = $wpdb->get_results("SELECT SQL_CALC_FOUND_ROWS " . $db_table->refresh_select($id_col, $content_col, $limit, $offset));
 		$total = $wpdb->get_var('SELECT FOUND_ROWS()');
@@ -214,7 +214,11 @@ class BfoxRefDbTable extends BfoxSequenceDbTable {
 		$scanned = count($results);
 		$indexed = 0;
 
-		foreach ($results as $data_row) if ($db_table->save_data_row($data_row, $id_col, $content_col)) $indexed++;
+		foreach ($results as $data_row) {
+			if ($db_table->save_data_row($data_row, $id_col, $content_col)) {
+				$indexed++;
+			}
+		};
 
 		return compact('scanned', 'indexed', 'total');
 	}

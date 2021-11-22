@@ -1,11 +1,11 @@
 <?php
 /*************************************************************************
-Plugin Name: Biblefox for WordPress
+Plugin Name: Biblefox for WordPress powered by Partiir
 Plugin URI: http://dev.biblefox.com/biblefox-for-wordpress/
 Description: Turns your WordPress site into an online Bible study tool. Creates a Bible index for your WordPress site, allowing your users to easily search your blog posts (or BuddyPress activities, when using BuddyPress) for any Bible reference. Use it for WordPress sites that involve a lot of discussion of the Bible.
-Version: 0.8.3
-Author: Biblefox.com, rvenable
-Author URI: http://biblefox.com
+Version: 0.8.7
+Author: Biblefox.com, rvenable, Partiir
+Author URI: http://partiir.com
 License: General Public License version 2
 Requires at least: WP 3.0, BuddyPress 1.2
 Tested up to: WP 3.0, BuddyPress 1.2.4.1
@@ -34,7 +34,7 @@ Text Domain: bfox
 
 *************************************************************************/
 
-define('BFOX_VERSION', '0.8.3');
+define('BFOX_VERSION', '0.8.99');
 define('BFOX_DIR', dirname(__FILE__));
 define('BFOX_REF_DIR', BFOX_DIR . '/biblefox-ref');
 define('BFOX_URL', WP_PLUGIN_URL . '/biblefox-for-wordpress');
@@ -67,8 +67,10 @@ function bfox_active_ref(BfoxRef $ref = null) {
  */
 function bfox_fix_ref_link_options(&$options) {
 	// If there is no ref_str, try to get it from $ref->get_string($name)
-	if (empty($options['ref_str']) && isset($options['ref']) && is_a($options['ref'], BfoxRef) && $options['ref']->is_valid())
-		$options['ref_str'] = $options['ref']->get_string($options['name']);
+	if (empty($options['ref_str']) && isset($options['ref']) && is_a($options['ref'], "BfoxRef") && $options['ref']->is_valid()){
+		$name = $options['name'] ?? '';
+		$options['ref_str'] = $options['ref']->get_string($name);
+	}
 }
 
 /**
@@ -89,13 +91,17 @@ function bfox_ref_link_from_options($options = array()) {
 		if (empty($text)) $text = $ref_str;
 
 		// If there is no href, get it from the bfox_ref_bible_url function
+		//Se detiene por aqui
 		if (!isset($attrs['href'])) bfox_ref_bible_url($ref_str);
+
+		$attrs['class'] ="";
 
 		// Add the bible-ref class
 		if (!isset($disable_tooltip)) {
 			if (!empty($attrs['class'])) $attrs['class'] .= ' ';
 			$attrs['class'] .= 'bible-tip bible-tip-' . urlencode(str_replace(' ', '_', strtolower($ref_str)));
 		}
+		$attrs['class'] .= ' bible_link';
 
 		$attr_str = '';
 		foreach ($attrs as $attr => $value) $attr_str .= " $attr='$value'";
@@ -115,7 +121,9 @@ function bfox_ref_link_from_options($options = array()) {
  * @return string
  */
 function bfox_ref_bible_url($ref_str) {
-	return sprintf(apply_filters('bfox_blog_bible_url_template', 'http://biblefox.com/bible/%s'), urlencode(strtolower($ref_str)));
+	$current_string = strtolower($ref_str);
+	$current_string =  str_replace([':', ' '], '.', $current_string);
+	return sprintf(apply_filters('bfox_blog_bible_url_template', 'https://www.bible.com/bible/8/%s.AMPC'), urlencode($current_string));
 }
 
 /**
@@ -141,14 +149,16 @@ function bfox_ref_bible_link($options) {
  * @return string
  */
 function bfox_ref_replace_html($content) {
+	global $wp_current_filter;
+
 	return BfoxRefParser::simple_html($content, null, 'bfox_ref_replace_html_cb');
 }
-	function bfox_ref_replace_html_cb($text, $ref) {
-		return bfox_ref_bible_link(array(
-			'ref' => $ref,
-			'text' => $text
-		));
-	}
+function bfox_ref_replace_html_cb($text, $ref) {
+	return bfox_ref_bible_link(array(
+		'ref' => $ref,
+		'text' => $text
+	));
+}
 
 /**
  * Returns a BfoxRef for the given tag string

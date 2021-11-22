@@ -895,7 +895,7 @@
 
             // Set z-index variables
             curIndex = parseInt( self.elements.tooltip.css('z-index') );
-            newIndex = 6000 + $('div.qtip[qtip]').length - 1;
+            newIndex = 9 + $('div.qtip[qtip]').length - 1;
 
             // Only update the z-index if it has changed and tooltip is not already focused
             if(!self.status.focused && curIndex !== newIndex)

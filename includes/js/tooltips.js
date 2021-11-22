@@ -1,11 +1,22 @@
 /*global jQuery, ajaxurl, bfox_blog_iframe_select_change */
 'use strict';
 
+function resizeTooltip(){
+	let current_size = window.innerWidth;
+	if(current_size >=1024){
+		return current_size * 0.5;
+	}
+	if(current_size >=650){
+		return current_size * 0.8;
+	}
+	return window.innerWidth - 10;
+}
+
 jQuery(document).ready(function () {
 	var refClassPrefix = 'bible-tip-';
 	// Add tooltips to bible ref links
 	// NOTE: For live() qTip config see: http://stackoverflow.com/questions/2005521/problem-with-qtip-tips-not-showing-because-elements-load-after-the-script#answer-2485862
-	jQuery('a.bible-tip').live('click', function () {
+	jQuery('body').on('click', 'a.bible-tip',function () {
 		var refStr, index, url, classes;
 		
 		classes = jQuery(this).attr('class').split(' ');
@@ -54,7 +65,7 @@ jQuery(document).ready(function () {
 					radius: 4
 				},
 				name: 'light', // Use the default light style
-				width: 640 // Set the tooltip width
+				width: resizeTooltip()  // Set the tooltip width
 			},
 			api: {
 				onContentUpdate: function () {

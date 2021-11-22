@@ -50,7 +50,7 @@ class BfoxPostRefDbTable extends BfoxRefDbTable {
 	}
 
 	public function refresh_select($id_col, $content_col, $limit = 0, $offset = 0) {
-		return "* FROM $this->data_table_name WHERE post_type = 'post' ORDER BY $id_col ASC LIMIT $offset, $limit";
+		return "* FROM $this->data_table_name WHERE post_type in ('collection', 'session', 'asset') ORDER BY $id_col ASC LIMIT $offset, $limit";
 	}
 
 	public function save_data_row($data_row, $id_col, $content_col) {
@@ -102,7 +102,10 @@ function bfox_blog_post_get_ref($post, $ref_type = null) {
 	$ref = new BfoxRef;
 
 	// Get Bible references from content
-	if (is_null($ref_type) || BfoxPostRefDbTable::ref_type_content == $ref_type) $ref->add_ref(bfox_ref_from_content($post->post_content));
+
+    $str_to_analize = $post->post_content . get_field('resource_text',$post) . ' ' . get_field('resource_scripture_references',$post);
+
+	if (is_null($ref_type) || BfoxPostRefDbTable::ref_type_content == $ref_type) $ref->add_ref(bfox_ref_from_content($str_to_analize));
 
 	// Get Bible references from tags
 	if (is_null($ref_type) || BfoxPostRefDbTable::ref_type_tag == $ref_type) {
@@ -188,13 +191,13 @@ function bfox_blog_posts_where($where) {
 }
 add_filter('posts_where', 'bfox_blog_posts_where');
 
-function bfox_blog_posts_groupby($sql) {
-	global $bfox_blog_query, $wpdb;
-	// Bible references searches need to group on the post ID
-	if (isset($bfox_blog_query->bfox_ref)) $sql .= " $wpdb->posts.ID";
-	return $sql;
-}
-add_filter('posts_groupby', 'bfox_blog_posts_groupby');
+//function bfox_blog_posts_groupby($sql) {
+//	global $bfox_blog_query, $wpdb;
+//	// Bible references searches need to group on the post ID
+//	if (isset($bfox_blog_query->bfox_ref)) $sql .= " $wpdb->posts.ID";
+//	return $sql;
+//}
+//add_filter('posts_groupby', 'bfox_blog_posts_groupby');
 
 /*
  * Content Filters
@@ -204,6 +207,8 @@ add_filter('posts_groupby', 'bfox_blog_posts_groupby');
 add_filter('the_content', 'bfox_ref_replace_html');
 add_filter('comment_text', 'bfox_ref_replace_html');
 add_filter('the_excerpt', 'bfox_ref_replace_html');
+add_filter( 'widget_text', 'bfox_ref_replace_html' );
+add_filter('acf/format_value', 'bfox_ref_replace_html');
 
 /**
  * Finds any bible references in an array of tag links and adds tooltips to them
@@ -277,7 +282,7 @@ function bfox_blog_quick_view_meta_box() {
  * @param object $post
  */
 function bfox_bible_post_link_setup($page, $context, $post) {
-	if ((!$post->ID || 'auto-draft' == $post->post_status) && 'post' == $page && 'side' == $context && !empty($_REQUEST['bfox_ref'])) {
+	if ($post != "" && (!$post->ID || 'auto-draft' == $post->post_status) && 'post' == $page && 'side' == $context && !empty($_REQUEST['bfox_ref'])) {
 		$hidden_ref = new BfoxRef($_REQUEST['bfox_ref']);
 		if ($hidden_ref->is_valid()) {
 			global $wp_meta_boxes;
@@ -415,6 +420,9 @@ function bfox_blog_admin_post_warnings() {
 add_action('admin_init', 'bfox_blog_admin_post_warnings');
 
 function bfox_blog_admin_post_check_refresh($show_settings) {
+    if(!isset($_GET['bfox_post_refresh'])){
+	    $_GET['bfox_post_refresh'] = false;
+    }
 	if ($show_settings && $_GET['bfox_post_refresh']) {
 		global $wpdb;
 		$table = bfox_blog_post_ref_table();
@@ -435,7 +443,7 @@ function bfox_blog_admin_post_check_refresh($show_settings) {
 			$blog_offset = $scan_total = $index_total = $blog_count = $date_finished = 0;
 		}
 
-		$limit = (int) $_GET['limit'];
+		$limit = isset ($_GET['limit']) ? (int) $_GET['limit'] : 100;
 		if (empty($limit)) $limit = 100;
 
 		// Loop until we've reach the limit or run out of blogs to scan

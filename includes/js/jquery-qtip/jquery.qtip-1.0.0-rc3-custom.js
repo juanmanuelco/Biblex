@@ -12,6 +12,32 @@
  * Released: Tuesday 12th May, 2009 - 00:00
  * Debug: jquery.qtip.debug.js
  */
+
+function getSizeMobile(value){
+   let current_size = window.innerWidth;
+   if(current_size < 400){
+      return 10;
+   }
+   if(current_size < 650){
+      return value /2;
+   }
+   if(current_size < 900){
+      return value -100;
+   }
+   return value;
+}
+
+jQuery.browser = {};
+(function () {
+   jQuery.browser.msie = false;
+   jQuery.browser.version = 0;
+   if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+      jQuery.browser.msie = true;
+      jQuery.browser.version = RegExp.$1;
+   }
+})();
+
+
 (function($)
 {
    // Implementation
@@ -573,6 +599,8 @@
             // Add user xy adjustments
             newPosition.left += self.options.position.adjust.x;
             newPosition.top += self.options.position.adjust.y;
+            newPosition.left = getSizeMobile(newPosition.left);
+
 
             // Set new tooltip position if its moved, animate if enabled
             curPosition = self.getPosition();
@@ -898,7 +926,7 @@
 
             // Set z-index variables
             curIndex = parseInt( self.elements.tooltip.css('z-index') );
-            newIndex = 6000 + $('div.qtip[qtip]').length - 1;
+            newIndex = 9 + $('div.qtip[qtip]').length - 1;
 
             // Only update the z-index if it has changed and tooltip is not already focused
             if(!self.status.focused && curIndex !== newIndex)

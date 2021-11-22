@@ -93,7 +93,8 @@ class BfoxRefSequence extends BfoxSequence {
 			$edit2 = TRUE;
 		}
 
-		if ($edit2) $end = BibleVerse::calc_unique_id($book2, $chapter2, $verse2);
+		//Editado
+		//if ($edit2) $end = BibleVerse::calc_unique_id($book2, $chapter2, $verse2);
 
 		$this->end = $end;
 
@@ -266,6 +267,7 @@ class BfoxRef extends BfoxSequenceList {
 			list($book2, $ch2, $vs2) = BibleVerse::calc_ref($seq->end);
 
 			$books = array();
+			$books[$book1] = new \stdClass();
 			$books[$book1]->start = array($ch1, $vs1);
 			if ($book2 > $book1) {
 				$start = array(0, 0);

@@ -14,7 +14,12 @@ class BfoxIframe {
 		$translations = BfoxTranslations::replace_vars(BfoxTranslations::translations(), $this->ref);
 
 		// Get the previously used Bible translation from cookies
-		foreach ($translations as $id => $trans) if (empty($this->url) || $id == $_COOKIE['bfox-blog-iframe-select']) $this->url = $trans->url;
+		foreach ($translations as $id => $trans) {
+			$trans->url = str_replace(array('+', '%3A'), '.', $trans->url);
+			if (empty($this->url) ) { //|| $id == $_COOKIE['bfox-blog-iframe-select']
+				$this->url = $trans->url;
+			}
+		};
 
 		$this->domains = BfoxTranslations::group_by_domain($translations);
 	}

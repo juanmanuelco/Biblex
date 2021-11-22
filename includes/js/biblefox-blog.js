@@ -2,7 +2,7 @@
 'use strict';
 
 // For when bfox translation iframe selects change to update their iframe
-bfox_blog_iframe_select_change = function () {
+var bfox_blog_iframe_select_change = function () {
 	var option, date;
 	option = jQuery(this).find('option:selected');
 

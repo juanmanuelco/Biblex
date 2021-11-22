@@ -20,7 +20,9 @@ $count = 0;
 	<div><?php echo $ref_str . __(' links', 'bfox') ?></div>
 	<ul>
 		<li><?php echo bfox_ref_bible_link(array('ref_str' => $ref_str, 'text' => __('Bible Reader', 'bfox'), 'disable_tooltip' => true)) ?></li>
-		<li><?php echo bfox_ref_blog_link(array('ref_str' => $ref_str, 'text' => __('Post Archive', 'bfox'), 'disable_tooltip' => true)) ?></li>
+		<li><?php
+            echo bfox_ref_blog_link(array('ref_str' => $ref_str, 'text' => __('Post Archive', 'bfox'), 'disable_tooltip' => true))
+            ?></li>
 
 		<?php if (current_user_can('edit_posts')): ?>
 		<li><?php echo bfox_blog_ref_write_link($ref_str, __('Write a post', 'bfox')) ?></li>
