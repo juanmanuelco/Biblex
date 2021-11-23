@@ -94,7 +94,7 @@ class BfoxRefSequence extends BfoxSequence {
 		}
 
 		//Editado
-		//if ($edit2) $end = BibleVerse::calc_unique_id($book2, $chapter2, $verse2);
+		if ($edit2) $end = BibleVerse::calc_unique_id($book2, $chapter2, $verse2);
 
 		$this->end = $end;
 
