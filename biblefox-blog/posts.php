@@ -103,7 +103,15 @@ function bfox_blog_post_get_ref($post, $ref_type = null) {
 
 	// Get Bible references from content
 
-    $str_to_analize = $post->post_content . get_field('resource_text',$post) . ' ' . get_field('resource_scripture_references',$post);
+	$str_to_analize = $post->post_content .
+	                  ' ' .
+	                  get_field('resource_text',$post) .
+	                  ' ' .
+	                  get_field('resource_scripture_references',$post) .
+	                  ' ' .
+	                  get_field('resource_meta_keywords',$post) .
+	                  ' '.
+	                  get_field('resource_meta_description',$post) ;
 
 	if (is_null($ref_type) || BfoxPostRefDbTable::ref_type_content == $ref_type) $ref->add_ref(bfox_ref_from_content($str_to_analize));
 
@@ -164,12 +172,24 @@ function bfox_blog_parse_query($wp_query) {
 	// Check to see if the search string is a bible reference
 	if (!empty($wp_query->query_vars['s'])) {
 		// TODO: use leftovers
-		$ref = bfox_ref_from_tag($wp_query->query_vars['s']);
-		if ($ref->is_valid()) {
-			$wp_query->query_vars['s'] = '';
-			$wp_query->bfox_ref = $ref;
+		set_transient('the_s', $wp_query->query_vars['s']);
+        $to_search = $wp_query->query_vars['s'];
+
+
+	}else{
+		if($wp_query->query_vars['jet_smart_filters'] == 'jet-engine/lg1' ){
+            $to_search = get_transient('the_s');
+			$wp_query->query_vars['s'] = $to_search;
 		}
-	}
+    }
+
+    if(!empty($to_search)){
+	    $ref = bfox_ref_from_tag($to_search);
+	    if ($ref->is_valid()) {
+		    $wp_query->query_vars['s'] = '';
+		    $wp_query->bfox_ref = $ref;
+	    }
+    }
 }
 add_action('parse_query', 'bfox_blog_parse_query');
 

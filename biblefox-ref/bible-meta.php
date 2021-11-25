@@ -175,7 +175,11 @@ class BibleMeta {
 	 * @return integer
 	 */
 	static function earliest_end($book, $chapter) {
-		return isset(self::$min_verse_counts[$book][$chapter]) ?? null;
+		try{
+			return self::$min_verse_counts[$book][$chapter];
+		}catch (\Throwable $e){
+			return null;
+		}
 	}
 
 	/**
