@@ -3,36 +3,34 @@
 Plugin Name: Biblefox for WordPress powered by Partiir
 Plugin URI: http://dev.biblefox.com/biblefox-for-wordpress/
 Description: Turns your WordPress site into an online Bible study tool. Creates a Bible index for your WordPress site, allowing your users to easily search your blog posts (or BuddyPress activities, when using BuddyPress) for any Bible reference. Use it for WordPress sites that involve a lot of discussion of the Bible.
-Version: 0.8.7
+Version: 0.8.7.4
 Author: Biblefox.com, rvenable, Partiir
 Author URI: http://partiir.com
 License: General Public License version 2
-Requires at least: WP 3.0, BuddyPress 1.2
-Tested up to: WP 3.0, BuddyPress 1.2.4.1
 Network: true
 Text Domain: bfox
-*************************************************************************/
+ *************************************************************************/
 
 /*************************************************************************
 
-	Copyright 2010 Biblefox.com
+Copyright 2010 Biblefox.com
 
-	This file is part of Biblefox for WordPress.
+This file is part of Biblefox for WordPress.
 
-	Biblefox for WordPress is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+Biblefox for WordPress is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-	Biblefox for WordPress is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+Biblefox for WordPress is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with Biblefox for WordPress.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License
+along with Biblefox for WordPress.  If not, see <http://www.gnu.org/licenses/>.
 
-*************************************************************************/
+ *************************************************************************/
 
 define('BFOX_VERSION', '0.8.99');
 define('BFOX_DIR', dirname(__FILE__));

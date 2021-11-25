@@ -67,7 +67,7 @@ function bible_ref_press_key(e) {
 jQuery(document).ready( function() {
 	jQuery('#view-bible-ref').click(bible_text_request_new);
 	jQuery('#new-bible-ref').keypress(bible_ref_press_key);
-	jQuery('a.add-bible-ref-tag').live('click', function () {
+	jQuery('body').on('click', 'a.add-bible-ref-tag', function () {
 		tagBox.flushTags(jQuery('.tagsdiv'), this);
 	});
 });
