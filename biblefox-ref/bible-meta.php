@@ -161,6 +161,9 @@ class BibleMeta {
 	 */
 	static function passage_end($book = 0, $chapter = 0) {
 		if (!$book) return 66; // Revelation (TODO: support apocrypha as an option)
+		if(!isset(self::$max_verse_counts[$book])){
+			return 66;
+		}
 		return (isset(self::$max_verse_counts[$book][$chapter])) ? self::$max_verse_counts[$book][$chapter] : self::$min_verse_counts[$book][$chapter];
 	}
 
@@ -175,11 +178,7 @@ class BibleMeta {
 	 * @return integer
 	 */
 	static function earliest_end($book, $chapter) {
-		try{
-			return self::$min_verse_counts[$book][$chapter];
-		}catch (\Throwable $e){
-			return null;
-		}
+		return isset(self::$min_verse_counts[$book][$chapter]) ? self::$min_verse_counts[$book][$chapter] : 255;
 	}
 
 	/**
