@@ -200,13 +200,22 @@ function bfox_blog_posts_join($join) {
 }
 add_filter('posts_join', 'bfox_blog_posts_join');
 
-function bfox_blog_posts_where($where) {
+function bfox_blog_posts_where($args, $query) {
 	global $bfox_blog_query;
+    global $wpdb;
 	$table = bfox_blog_post_ref_table();
-	if (isset($bfox_blog_query->bfox_ref)) $where .= ' AND ' . $table->seqs_where($bfox_blog_query->bfox_ref);
-	return $where;
+	if (isset($bfox_blog_query->bfox_ref)) {
+		$bible_str =  $table->seqs_where( $bfox_blog_query->bfox_ref );
+
+		$args['where'] = preg_replace(
+			"/\(\s*{$wpdb->posts}.post_content\s+LIKE\s*(\'[^\']+\')\s*\)/",
+			"({$wpdb->posts}.post_content LIKE $1) OR {$bible_str}", $args['where'] );
+
+    };
+	return $args;
 }
-add_filter('posts_where', 'bfox_blog_posts_where');
+//add_filter('posts_where', 'bfox_blog_posts_where');
+add_filter('posts_clauses', 'bfox_blog_posts_where', 10,2);
 
 //function bfox_blog_posts_groupby($sql) {
 //	global $bfox_blog_query, $wpdb;

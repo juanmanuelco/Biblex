@@ -3,7 +3,7 @@
 Plugin Name: Biblefox for WordPress powered by Partiir
 Plugin URI: http://dev.biblefox.com/biblefox-for-wordpress/
 Description: Turns your WordPress site into an online Bible study tool. Creates a Bible index for your WordPress site, allowing your users to easily search your blog posts (or BuddyPress activities, when using BuddyPress) for any Bible reference. Use it for WordPress sites that involve a lot of discussion of the Bible.
-Version: 0.8.7.5
+Version: 0.8.7.6
 Author: Biblefox.com, rvenable, Partiir
 Author URI: http://partiir.com
 License: General Public License version 2
