@@ -102,10 +102,12 @@ function bfox_ref_link_from_options($options = array()) {
 		}
 		$attrs['class'] .= ' bible_link';
 
-		$lang = 'en';
+		$lang = explode('_', get_locale())[0];
 		$post_obj = get_post($post);
-		if($post_obj != null) $lang_post = get_field('resource_language', $post);
-		$lang = empty($lang_post)? 'en' : $lang_post;
+		if(function_exists('get_field')){
+			if($post_obj != null) $lang_post = get_field('resource_language', $post);
+			$lang = empty($lang_post)? $lang : $lang_post;
+		}
 
 		$attrs['class'] .= " bible_link_lang-$lang";
 
