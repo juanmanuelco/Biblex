@@ -9,9 +9,12 @@ class BfoxIframe {
 
 	private $url;
 
-	public function __construct(BfoxRef $ref) {
+	private $lang;
+
+	public function __construct(BfoxRef $ref, string $ln = 'en') {
 		$this->ref = $ref;
-		$translations = BfoxTranslations::replace_vars(BfoxTranslations::translations(), $this->ref);
+		$this->lang = $ln;
+		$translations = BfoxTranslations::replace_vars(BfoxTranslations::translations(true, $this->lang), $this->ref);
 
 		// Get the previously used Bible translation from cookies
 		foreach ($translations as $id => $trans) {

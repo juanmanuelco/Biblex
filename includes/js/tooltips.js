@@ -17,7 +17,7 @@ jQuery(document).ready(function () {
 	// Add tooltips to bible ref links
 	// NOTE: For live() qTip config see: http://stackoverflow.com/questions/2005521/problem-with-qtip-tips-not-showing-because-elements-load-after-the-script#answer-2485862
 	jQuery('body').on('click', 'a.bible-tip',function () {
-		var refStr, index, url, classes;
+		var refStr, index, url, classes, lang = 'en', load_str = 'Loading...', close_str = 'Close';
 		
 		classes = jQuery(this).attr('class').split(' ');
 		for (index = 0; index < classes.length; index = index + 1) {
@@ -26,20 +26,26 @@ jQuery(document).ready(function () {
 				break;
 			}
 		}
+		if(classes[3].includes('bible_link_lang')){
+			lang = classes[3].split('-');
+			lang = lang[1];
+			load_str = lang === 'es' ? 'Cargando ...': load_str;
+			close_str = lang === 'es' ? 'Cerrar' : close_str;
+		}
 		
 		if (undefined === refStr) {
 			return true;
 		}
 		
-		url = ajaxurl + ((ajaxurl.indexOf('?') === -1) ? '?' : '&') + 'bfox-tooltip-ref=' + refStr;
+		url = ajaxurl + ((ajaxurl.indexOf('?') === -1) ? '?' : '&') + 'bfox-tooltip-ref=' + refStr+'&lang=' + lang;
 
 		jQuery(this).qtip({
 			content: {
-				text: 'Loading...',
+				text: load_str,
 				url: url,
 				title: {
 					text: '<a href="' + jQuery(this).attr('href') + '">' + jQuery(this).text() + '</a>', // Give the tooltip a title using each elements text
-					button: 'Close' // Show a close link in the title
+					button: close_str // Show a close link in the title
 				}
 			},
 			position: {

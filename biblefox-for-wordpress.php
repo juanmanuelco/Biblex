@@ -32,7 +32,7 @@ along with Biblefox for WordPress.  If not, see <http://www.gnu.org/licenses/>.
 
  *************************************************************************/
 
-define('BFOX_VERSION', '0.8.99');
+define('BFOX_VERSION', '0.8.994');
 define('BFOX_DIR', dirname(__FILE__));
 define('BFOX_REF_DIR', BFOX_DIR . '/biblefox-ref');
 define('BFOX_URL', WP_PLUGIN_URL . '/biblefox-for-wordpress');
@@ -80,6 +80,7 @@ function bfox_fix_ref_link_options(&$options) {
  * @return string
  */
 function bfox_ref_link_from_options($options = array()) {
+	global $post;
 	extract($options);
 	$link = '';
 
@@ -100,6 +101,13 @@ function bfox_ref_link_from_options($options = array()) {
 			$attrs['class'] .= 'bible-tip bible-tip-' . urlencode(str_replace(' ', '_', strtolower($ref_str)));
 		}
 		$attrs['class'] .= ' bible_link';
+
+		$lang = 'en';
+		$post_obj = get_post($post);
+		if($post_obj != null) $lang_post = get_field('resource_language', $post);
+		$lang = empty($lang_post)? 'en' : $lang_post;
+
+		$attrs['class'] .= " bible_link_lang-$lang";
 
 		$attr_str = '';
 		foreach ($attrs as $attr => $value) $attr_str .= " $attr='$value'";
@@ -188,7 +196,7 @@ function bfox_ref_from_content($content) {
 function bfox_check_for_tooltip() {
 	if (isset($_REQUEST['bfox-tooltip-ref'])) {
 		global $tooltip_ref;
-		global $post;
+		$lang = $_REQUEST['lang'];
 		$tooltip_ref = new BfoxRef(str_replace('_', ' ', $_REQUEST['bfox-tooltip-ref']));
 		require BFOX_DIR . '/tooltip.php';
 		exit;

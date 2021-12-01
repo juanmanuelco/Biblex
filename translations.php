@@ -6,28 +6,31 @@ class BfoxTranslations {
 		return parse_url($translation->url, PHP_URL_HOST);
 	}
 
-	public static function translations($use_default_if_empty = true) {
+	public static function translations($use_default_if_empty = true, string $lang = 'en') {
 		$translations = get_option('bfox_translations');
 
 		// If we don't have any translations saved used the defaults
 		if ($use_default_if_empty && empty($translations)) {
             //https://www.blueletterbible.org/kjv/rom/10/5-8/s_1056005
             $site = "https://www.blueletterbible.org";
-			$defaults = (array) apply_filters('bfox_translation_defaults', array(
 
-				array('KJV', 'King James Version', "{$site}/%ref%"),
-				array('RVR1960', 'Reina Valera 1960', "{$site}/rvr60/%ref%"),
-				array('ESV', 'English Standard Version', "{$site}/ESV/%ref%"),
-				array('WEB', 'World English Bible', "{$site}/WEB/%ref%"),
-				array('HNV', 'Hebrew Names Version', "{$site}/HNV/%ref%"),
+            $first = array('KJV', 'King James Version', "{$site}/%ref%");
+            $second = array('RVR1960', 'Reina Valera 1960', "{$site}/rvr60/%ref%");
 
-				//array('RVA2015', 'Reina Valera Actualizada', "{$site}/RVA2015/%ref%"),
-				//array('RVC', 'Reina Valera Contemporánea', "{$site}/RVC/%ref%"),
-				//array('RVES', 'Reina-Valera Antigua', "{$site}/RVES/%ref%"),
-				//array('RVR1909', 'Reina Valera 1909', "{$site}/RVR09/%ref%"),
-				//array('RVR1995', 'Reina Valera 1995', "{$site}/RVR95/%ref%"),
-				//array('AMPC', 'Amplified Bible, Classic Edition', "{$site}/AMPC/%ref%"),
-			));
+            if($lang == 'es'){
+	            $first = array('RVR1960', 'Reina Valera 1960', "{$site}/rvr60/%ref%");
+	            $second = array('KJV', 'King James Version', "{$site}/%ref%");
+            }
+
+            $bibles = array($first, $second);
+
+            $bibles = array_merge($bibles, array(
+	            array('ESV', 'English Standard Version', "{$site}/ESV/%ref%"),
+	            array('WEB', 'World English Bible', "{$site}/WEB/%ref%"),
+	            array('HNV', 'Hebrew Names Version', "{$site}/HNV/%ref%"),
+            ));
+
+			$defaults = (array) apply_filters('bfox_translation_defaults', $bibles);
 
 			foreach ($defaults as $default) {
 				$translation = new stdClass;

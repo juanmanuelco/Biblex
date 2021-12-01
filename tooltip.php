@@ -31,7 +31,7 @@ $count = 0;
 </div>
 
 <div class="bfox-tooltip-bible">
-	<?php $iframe = new BfoxIframe($tooltip_ref) ?>
+	<?php $iframe = new BfoxIframe($tooltip_ref, $lang) ?>
 	<select class="bfox-iframe-select langer">
 		<?php echo $iframe->select_options() ?>
 	</select>
