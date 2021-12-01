@@ -32,8 +32,8 @@ $count = 0;
 
 <div class="bfox-tooltip-bible">
 	<?php $iframe = new BfoxIframe($tooltip_ref) ?>
-	<select class="bfox-iframe-select">
+	<select class="bfox-iframe-select langer">
 		<?php echo $iframe->select_options() ?>
 	</select>
-	<iframe class="bfox-iframe bfox-tooltip-iframe" src="<?php echo $iframe->url() ?>"></iframe>
+	<iframe sandbox="allow-same-origin allow-scripts allow-popups allow-forms" class="bfox-iframe bfox-tooltip-iframe" src="<?php echo $iframe->url() ?>"></iframe>
 </div>

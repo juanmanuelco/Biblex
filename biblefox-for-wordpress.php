@@ -3,7 +3,7 @@
 Plugin Name: Biblefox for WordPress powered by Partiir
 Plugin URI: http://dev.biblefox.com/biblefox-for-wordpress/
 Description: Turns your WordPress site into an online Bible study tool. Creates a Bible index for your WordPress site, allowing your users to easily search your blog posts (or BuddyPress activities, when using BuddyPress) for any Bible reference. Use it for WordPress sites that involve a lot of discussion of the Bible.
-Version: 0.8.7.6
+Version: 0.8.7.7
 Author: Biblefox.com, rvenable, Partiir
 Author URI: http://partiir.com
 License: General Public License version 2
@@ -120,8 +120,10 @@ function bfox_ref_link_from_options($options = array()) {
  */
 function bfox_ref_bible_url($ref_str) {
 	$current_string = strtolower($ref_str);
-	$current_string =  str_replace([':', ' '], '.', $current_string);
-	return sprintf(apply_filters('bfox_blog_bible_url_template', 'https://www.bible.com/bible/8/%s.AMPC'), urlencode($current_string));
+	$current_string =  str_replace([':', ' ', '.'], '/', $current_string);
+	//$current_string = urlencode($current_string);
+	//https://www.blueletterbible.org/kjv/rom/10/5-8/s_1056005
+	return sprintf(apply_filters('bfox_blog_bible_url_template', 'https://www.blueletterbible.org/KJV/%s'), $current_string);
 }
 
 /**
@@ -186,6 +188,7 @@ function bfox_ref_from_content($content) {
 function bfox_check_for_tooltip() {
 	if (isset($_REQUEST['bfox-tooltip-ref'])) {
 		global $tooltip_ref;
+		global $post;
 		$tooltip_ref = new BfoxRef(str_replace('_', ' ', $_REQUEST['bfox-tooltip-ref']));
 		require BFOX_DIR . '/tooltip.php';
 		exit;

@@ -15,7 +15,7 @@ class BfoxIframe {
 
 		// Get the previously used Bible translation from cookies
 		foreach ($translations as $id => $trans) {
-			$trans->url = str_replace(array('+', '%3A'), '.', $trans->url);
+			$trans->url = str_replace(array('+', '%3A'), '/', $trans->url);
 			if (empty($this->url) ) { //|| $id == $_COOKIE['bfox-blog-iframe-select']
 				$this->url = $trans->url;
 			}

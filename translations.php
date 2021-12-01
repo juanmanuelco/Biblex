@@ -11,22 +11,22 @@ class BfoxTranslations {
 
 		// If we don't have any translations saved used the defaults
 		if ($use_default_if_empty && empty($translations)) {
+            //https://www.blueletterbible.org/kjv/rom/10/5-8/s_1056005
+            $site = "https://www.blueletterbible.org";
 			$defaults = (array) apply_filters('bfox_translation_defaults', array(
 
-				array('KJV', 'King James Version', 'https://www.bible.com/bible/1/%ref%.KJV'),
+				array('KJV', 'King James Version', "{$site}/%ref%"),
+				array('RVR1960', 'Reina Valera 1960', "{$site}/rvr60/%ref%"),
+				array('ESV', 'English Standard Version', "{$site}/ESV/%ref%"),
+				array('WEB', 'World English Bible', "{$site}/WEB/%ref%"),
+				array('HNV', 'Hebrew Names Version', "{$site}/HNV/%ref%"),
 
-				array('RVA2015', 'Reina Valera Actualizada', 'https://www.bible.com/bible/1782/%ref%.RVA2015'),
-				array('RVC', 'Reina Valera Contemporánea', 'https://www.bible.com/bible/146/%ref%.RVC'),
-				array('RVES', 'Reina-Valera Antigua', 'https://www.bible.com/bible/147/%ref%.RVC'),
-
-				array('RVR1909', 'Reina Valera 1909', 'https://www.bible.com/bible/1718/%ref%.RVR09'),
-				array('RVR1960', 'Reina Valera 1960', 'https://www.bible.com/bible/149/%ref%.RVR1960'),
-				array('RVR1995', 'Reina Valera 1995', 'https://www.bible.com/bible/150/%ref%.RVR95'),
-
-				array('AMPC', 'Amplified Bible, Classic Edition', 'https://www.bible.com/bible/8/%ref%.AMPC'),
-				array('ESV', 'English Standard Version', 'https://www.bible.com/bible/59/%ref%.ESV'),
-				array('WEB', 'World English Bible', 'https://www.bible.com/bible/206/%ref%.WEB'),
-				array('HNV', 'Hebrew Names Version', 'https://www.bible.com/bible/8/%ref%.HNV'),
+				//array('RVA2015', 'Reina Valera Actualizada', "{$site}/RVA2015/%ref%"),
+				//array('RVC', 'Reina Valera Contemporánea', "{$site}/RVC/%ref%"),
+				//array('RVES', 'Reina-Valera Antigua', "{$site}/RVES/%ref%"),
+				//array('RVR1909', 'Reina Valera 1909', "{$site}/RVR09/%ref%"),
+				//array('RVR1995', 'Reina Valera 1995', "{$site}/RVR95/%ref%"),
+				//array('AMPC', 'Amplified Bible, Classic Edition', "{$site}/AMPC/%ref%"),
 			));
 
 			foreach ($defaults as $default) {

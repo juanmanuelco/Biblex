@@ -1888,7 +1888,7 @@ jQuery.browser = {};
       dimensions = self.getDimensions();
 
       // Setup iframe HTML string
-      html = '<iframe class="qtip-bgiframe" frameborder="0" tabindex="-1" src="javascript:false" '+
+      html = '<iframe sandbox="allow-same-origin allow-scripts allow-popups allow-forms" class="qtip-bgiframe" frameborder="0" tabindex="-1" src="javascript:false" '+
          'style="display:block; position:absolute; z-index:-1; filter:alpha(opacity=\'0\'); border: 1px solid red; ' +
          'height:'+dimensions.height+'px; width:'+dimensions.width+'px" />';
 

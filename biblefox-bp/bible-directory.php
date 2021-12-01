@@ -205,7 +205,7 @@ function bfox_bp_bible_directory_iframe() {
 				<select class="bfox-iframe-select bfox-passage-iframe-select">
 					<?php echo $iframe->select_options() ?>
 				</select>
-				<iframe class="bfox-iframe bfox-passage-iframe" src="<?php echo $iframe->url() ?>"></iframe>
+				<iframe sandbox="allow-same-origin allow-scripts allow-popups allow-forms" class="bfox-iframe bfox-passage-iframe" src="<?php echo $iframe->url() ?>"></iframe>
 			</div>
 	<?php
 }

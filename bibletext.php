@@ -49,7 +49,7 @@
 
 			$iframe = new BfoxIframe($book_ref);
 			$verse_content = '<select class="bfox-iframe-select">' . $iframe->select_options() . '</select>';
-			$verse_content .= '<iframe class="bfox-iframe bfox-tooltip-iframe" src="' . $iframe->url() . '"></iframe>';
+			$verse_content .= '<iframe sandbox="allow-same-origin allow-scripts allow-popups allow-forms" class="bfox-iframe bfox-tooltip-iframe" src="' . $iframe->url() . '"></iframe>';
 
 			$content = $nav_bar . $verse_content;
 			$content .= '<hr/>';
