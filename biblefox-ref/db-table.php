@@ -131,7 +131,8 @@ class BfoxSequenceDbTable {
 	public function delete_simple_items($item_ids) {
 		global $wpdb;
 		if (!is_array($item_ids)) $item_ids = array($item_ids);
-		$wpdb->query("DELETE FROM $this->table_name WHERE item_id IN (" . implode(',', $wpdb->escape($item_ids)) . ")");
+		$placeholders = implode(',', array_fill(0, count($item_ids), '%d'));
+		$wpdb->query($wpdb->prepare("DELETE FROM $this->table_name WHERE item_id IN ($placeholders)", $item_ids));
 	}
 
 	/**
