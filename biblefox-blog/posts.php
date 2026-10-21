@@ -170,23 +170,12 @@ function bfox_blog_parse_query($wp_query) {
 	// Check to see if the search string is a bible reference
 	if (!empty($wp_query->query_vars['s'])) {
 		// TODO: use leftovers
-		set_transient('the_s', $wp_query->query_vars['s']);
-        $to_search = $wp_query->query_vars['s'];
-
-
-	} else if (isset($wp_query->query_vars['jet_smart_filters'])){
-		if($wp_query->query_vars['jet_smart_filters'] == 'jet-engine/lg1' ){
-            $to_search = get_transient('the_s');
+		$ref = bfox_ref_from_tag($wp_query->query_vars['s']);
+		if ($ref->is_valid()) {
+			//$wp_query->query_vars['s'] = '';
+			$wp_query->bfox_ref = $ref;
 		}
-    }
-
-    if(!empty($to_search)){
-	    $ref = bfox_ref_from_tag($to_search);
-	    if ($ref->is_valid()) {
-		    $wp_query->query_vars['s'] = $to_search;
-		    $wp_query->bfox_ref = $ref;
-	    }
-    }
+	}
 }
 add_action('parse_query', 'bfox_blog_parse_query');
 
@@ -194,7 +183,7 @@ function bfox_blog_posts_join($join) {
 	global $bfox_blog_query, $wpdb;
 	if (isset($bfox_blog_query->bfox_ref)) {
 		$table = bfox_blog_post_ref_table();
-		$join .= ' ' . $table->join_sql("$wpdb->posts.ID");
+		$join .= ' LEFT ' . $table->join_sql("$wpdb->posts.ID");
 	}
 	return $join;
 }
@@ -210,7 +199,6 @@ function bfox_blog_posts_where($args, $query) {
 		$args['where'] = preg_replace(
 			"/\(\s*{$wpdb->posts}.post_content\s+LIKE\s*(\'[^\']+\')\s*\)/",
 			"({$wpdb->posts}.post_content LIKE $1) OR {$bible_str}", $args['where'] );
-
     };
 	return $args;
 }

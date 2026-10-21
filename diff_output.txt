@@ -1,0 +1,122 @@
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	modified:   biblefox-blog/posts.php
+	modified:   biblefox-for-wordpress.php
+	modified:   biblefox-ref/parser.php
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	diff_output.txt
+
+
+===== DIFF =====
+diff --git a/biblefox-blog/posts.php b/biblefox-blog/posts.php
+index a61d3b5..50dadc7 100644
+--- a/biblefox-blog/posts.php
++++ b/biblefox-blog/posts.php
+@@ -170,23 +170,12 @@ function bfox_blog_parse_query($wp_query) {
+ 	// Check to see if the search string is a bible reference
+ 	if (!empty($wp_query->query_vars['s'])) {
+ 		// TODO: use leftovers
+-		set_transient('the_s', $wp_query->query_vars['s']);
+-        $to_search = $wp_query->query_vars['s'];
+-
+-
+-	} else if (isset($wp_query->query_vars['jet_smart_filters'])){
+-		if($wp_query->query_vars['jet_smart_filters'] == 'jet-engine/lg1' ){
+-            $to_search = get_transient('the_s');
++		$ref = bfox_ref_from_tag($wp_query->query_vars['s']);
++		if ($ref->is_valid()) {
++			//$wp_query->query_vars['s'] = '';
++			$wp_query->bfox_ref = $ref;
+ 		}
+-    }
+-
+-    if(!empty($to_search)){
+-	    $ref = bfox_ref_from_tag($to_search);
+-	    if ($ref->is_valid()) {
+-		    $wp_query->query_vars['s'] = $to_search;
+-		    $wp_query->bfox_ref = $ref;
+-	    }
+-    }
++	}
+ }
+ add_action('parse_query', 'bfox_blog_parse_query');
+ 
+@@ -194,7 +183,7 @@ function bfox_blog_posts_join($join) {
+ 	global $bfox_blog_query, $wpdb;
+ 	if (isset($bfox_blog_query->bfox_ref)) {
+ 		$table = bfox_blog_post_ref_table();
+-		$join .= ' ' . $table->join_sql("$wpdb->posts.ID");
++		$join .= ' LEFT ' . $table->join_sql("$wpdb->posts.ID");
+ 	}
+ 	return $join;
+ }
+@@ -210,7 +199,6 @@ function bfox_blog_posts_where($args, $query) {
+ 		$args['where'] = preg_replace(
+ 			"/\(\s*{$wpdb->posts}.post_content\s+LIKE\s*(\'[^\']+\')\s*\)/",
+ 			"({$wpdb->posts}.post_content LIKE $1) OR {$bible_str}", $args['where'] );
+-
+     };
+ 	return $args;
+ }
+diff --git a/biblefox-for-wordpress.php b/biblefox-for-wordpress.php
+index 8c862ba..1116afa 100644
+--- a/biblefox-for-wordpress.php
++++ b/biblefox-for-wordpress.php
+@@ -3,7 +3,7 @@
+ Plugin Name: Biblefox for WordPress powered by Partiir
+ Plugin URI: http://dev.biblefox.com/biblefox-for-wordpress/
+ Description: Turns your WordPress site into an online Bible study tool. Creates a Bible index for your WordPress site, allowing your users to easily search your blog posts (or BuddyPress activities, when using BuddyPress) for any Bible reference. Use it for WordPress sites that involve a lot of discussion of the Bible.
+-Version: 0.8.7.7
++Version: 0.8.7.8
+ Author: Biblefox.com, rvenable, Partiir
+ Author URI: http://partiir.com
+ License: General Public License version 2
+@@ -114,7 +114,8 @@ function bfox_ref_link_from_options($options = array()) {
+ 		$attr_str = '';
+ 		foreach ($attrs as $attr => $value) $attr_str .= " $attr='$value'";
+ 
+-		$link = "<a$attr_str>$text</a>";
++		//$link = "<a$attr_str>$text</a>";
++        $link = " $text";
+ 	}
+ 
+ 	return $link;
+diff --git a/biblefox-ref/parser.php b/biblefox-ref/parser.php
+index f6571f1..feb8e72 100644
+--- a/biblefox-ref/parser.php
++++ b/biblefox-ref/parser.php
+@@ -24,6 +24,12 @@ class BfoxRefParser
+      */
+     public $leftovers;
+ 
++    /**
++     * Optional callback function to replace matched references
++     * @var callable|null
++     */
++    public $replace_func = null;
++
+     /**
+      * The max level of book abbreviations to allow
+      * @var integer
+@@ -156,8 +162,7 @@ class BfoxRefParser
+ 	    'pro'=>20,'prv'=>20,'prov'=>20,'proverbs'=>20, 'pr'=>20,
+ 	    'eccl'=>21,'ecc'=>21,'qoheleth'=>21,'qoh'=>21,'eccles'=>21,'ecclesiastes'=>21, 'ec'=>21,
+ 	    'sng'=>22,'sos'=>22,'song of songs'=>22,'canticles'=>22,'canticle of canticles'=>22,'song'=>22,'song of solomon'=>22, 'so'=>22,
+-	    'isaiah'=>23,'isa'=>23, 'is'=>23,
+-	    'jer'=>24,'jeremiah'=>24, 'jr'=>24,'je'=>24,
++	    'isaiah'=>23,'isa'=>23, 'jer'=>24,'jeremiah'=>24, 'jr'=>24,'je'=>24,
+ 	    'lamentations'=>25,'lam'=>25, 'la'=>25,
+ 	    'ezk'=>26,'eze'=>26,'ezek'=>26,'ezekiel'=>26,
+ 	    'dan'=>27,'daniel'=>27, 'dn'=>27,'da'=>27,
+@@ -488,4 +493,4 @@ function bfox_process_html_text($html, $func, $params = array())
+ 		}
+ 	}
+     return $html;
+-}
++}
+\ No newline at end of file

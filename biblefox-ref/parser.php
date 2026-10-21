@@ -25,6 +25,12 @@ class BfoxRefParser
     public $leftovers;
 
     /**
+     * Optional callback function to replace matched references
+     * @var callable|null
+     */
+    public $replace_func = null;
+
+    /**
      * The max level of book abbreviations to allow
      * @var integer
      */
@@ -156,8 +162,7 @@ class BfoxRefParser
 	    'pro'=>20,'prv'=>20,'prov'=>20,'proverbs'=>20, 'pr'=>20,
 	    'eccl'=>21,'ecc'=>21,'qoheleth'=>21,'qoh'=>21,'eccles'=>21,'ecclesiastes'=>21, 'ec'=>21,
 	    'sng'=>22,'sos'=>22,'song of songs'=>22,'canticles'=>22,'canticle of canticles'=>22,'song'=>22,'song of solomon'=>22, 'so'=>22,
-	    'isaiah'=>23,'isa'=>23, 'is'=>23,
-	    'jer'=>24,'jeremiah'=>24, 'jr'=>24,'je'=>24,
+	    'isaiah'=>23,'isa'=>23, 'jer'=>24,'jeremiah'=>24, 'jr'=>24,'je'=>24,
 	    'lamentations'=>25,'lam'=>25, 'la'=>25,
 	    'ezk'=>26,'eze'=>26,'ezek'=>26,'ezekiel'=>26,
 	    'dan'=>27,'daniel'=>27, 'dn'=>27,'da'=>27,
