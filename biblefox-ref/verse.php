@@ -37,11 +37,10 @@ class BibleVerse {
 
 	public static function calc_ref($unique_id) {
 		$verse = $unique_id % self::max_num_verses;
-		$unique_id = (int) $unique_id / self::max_num_verses;
+		$unique_id = intdiv((int) $unique_id, self::max_num_verses);
 		$chapter = $unique_id % self::max_num_chapters;
-		$unique_id = (int) $unique_id / self::max_num_chapters;
+		$unique_id = intdiv($unique_id, self::max_num_chapters);
 		$book = $unique_id % self::max_num_books;
-
 		return array($book, $chapter, $verse);
 	}
 
